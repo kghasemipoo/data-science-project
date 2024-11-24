@@ -9,6 +9,7 @@ data['dt'] = pd.to_datetime(data['dt'])
 data['Year'] = data['dt'].dt.year
 data = data.dropna()
 
+
 # Convert coordinates
 def convert_coords(coord):
     """Convert coordinate strings to numeric."""
@@ -18,15 +19,22 @@ def convert_coords(coord):
         return -float(coord[:-1])
     return float(coord)
 
+
 data['Latitude'] = data['Latitude'].apply(convert_coords)
 data['Longitude'] = data['Longitude'].apply(convert_coords)
 
 # Calculate the temperature range (max temperature - min temperature) for each city
 temperature_range = data.groupby(['City', 'Country'])['AverageTemperature'].agg(['max', 'min'])
+
+# DEBUG
+# print(temperature_range)
+# exit(0)
+
 temperature_range['range'] = temperature_range['max'] - temperature_range['min']
 
 # Sort cities by temperature range in descending order
-top_cities_range = temperature_range.sort_values(by='range', ascending=False).head(10)  # Top 10 cities with largest range
+top_cities_range = temperature_range.sort_values(by='range', ascending=False).head(
+    20)  # Top 20 cities with largest range
 
 # Merge with the original data to get coordinates
 top_cities_data = data[data.set_index(['City', 'Country']).index.isin(top_cities_range.index)]
@@ -36,7 +44,9 @@ top_cities_data_unique = top_cities_data.drop_duplicates(subset=['City', 'Countr
 
 # Create GeoDataFrame for the top cities
 gdf = geopandas.GeoDataFrame(
-    top_cities_data_unique, geometry=geopandas.points_from_xy(top_cities_data_unique.Longitude, top_cities_data_unique.Latitude), crs="EPSG:4326"
+    top_cities_data_unique,
+    geometry=geopandas.points_from_xy(top_cities_data_unique.Longitude, top_cities_data_unique.Latitude),
+    crs="EPSG:4326"
 )
 
 # Load the world map using GeoPandas built-in dataset
