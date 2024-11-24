@@ -1,1 +1,1 @@
-git add -A & git commit "msg" & git push
+git add -A && git commit "msg" && git push
