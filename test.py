@@ -82,11 +82,13 @@ def warmest_route(dist, temp, start, end):
     return route
 
 result = warmest_route(distance_matrix, temp_list, c1_index, c2_index)
-print("Route:", result)
 
-print(len(list(set(result))) , len(result))
+results_names = [data_in_specific_date['City'][idx] for idx in result]
 
-for idx in result:
-    print(data_in_specific_date['City'][idx])
+print("Route:", results_names)
+
+coords = [ (data_in_specific_date['Longitude'][idx],data_in_specific_date['Latitude'][idx]) for idx in result]
+
+print(coords)
 
 
