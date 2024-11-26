@@ -53,26 +53,25 @@ if st.sidebar.button("Find Warmest Route"):
                 st.error(f"One or both cities ({c1}, {c2}) are not present in the dataset for the given date.")
                 st.stop()
 
-            # Calculate distance matrix
+            #Stores the number of rows in the filtered dataset (number of cities on that date).
             row_length = data_in_specific_date.shape[0]
 
-
+            #calculate the distance between two cities based on their latitude and longitude indices (i and j).
             def calc_distance_between_cities(i, j):
                 p1 = (data_in_specific_date['Longitude'][i], data_in_specific_date['Latitude'][i])
                 p2 = (data_in_specific_date['Longitude'][j], data_in_specific_date['Latitude'][j])
                 return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
 
-
+            # Calculate distance matrix
             distance_matrix = [
                 [
                     0 if i == j else calc_distance_between_cities(i, j) for j in range(row_length)
                 ] for i in range(row_length)
             ]
-
-            # Function to find the warmest route
+            #Converts the AverageTemperature column into a list for easy access.
             temp_list = list(data_in_specific_date['AverageTemperature'])
 
-
+            # Function to find the warmest route
             def warmest_route(dist, temp, start, end):
                 n = len(dist)
                 visited = set()
@@ -104,6 +103,7 @@ if st.sidebar.button("Find Warmest Route"):
             result = warmest_route(distance_matrix, temp_list, c1_index, c2_index)
 
             # Get route city names and coordinates
+            #Converts the route (indices) into city names and prints the result.
             results_names = [data_in_specific_date['City'][idx] for idx in result]
             coords = [(data_in_specific_date['Longitude'][idx], data_in_specific_date['Latitude'][idx]) for idx in
                       result]

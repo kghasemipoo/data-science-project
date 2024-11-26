@@ -27,6 +27,7 @@ data['Longitude'] = data['Longitude'].apply(convert_coords)
 specific_data = '1849-04-01'
 data_in_specific_date = data[data['dt'] == specific_data].reset_index(drop=True)
 
+# Stores the number of rows in the filtered dataset (number of cities on that date).
 row_length = data_in_specific_date.shape[0]
 
 # Function to calculate distances between two cities

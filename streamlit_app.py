@@ -92,7 +92,6 @@ if app_choice == "Temperature Analysis":
 
 # The Routing App
 elif app_choice == "Routing between 2 cities":
-    # st.title("Other App 1")
     os.system("streamlit run streamlit_app2.py")
 
 
